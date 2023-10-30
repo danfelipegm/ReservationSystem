@@ -1,49 +1,46 @@
+
 package service;
 
-import dao.ConferenceRoomDao;
 import model.ConferenceRoom;
+import dao.ConferenceRoomDao;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ReservationSystem {
 
-    private List<ConferenceRoom> availableRooms = new ArrayList<ConferenceRoom>();
     private ConferenceRoomDao roomDao;
 
     public ReservationSystem(ConferenceRoomDao roomDao) {
         this.roomDao = roomDao;
-        availableRooms.add(new ConferenceRoom("A1", 10));
-        availableRooms.add(new ConferenceRoom("A2", 20));
     }
 
     public boolean reserveRoom(String roomId) {
-        for (ConferenceRoom room : availableRooms) {
-            if (room.getId().equals(roomId) && !room.isReserved()) {
-                room.setReserved(true);
-                return true;
-            }
+        ConferenceRoom room = roomDao.getRoomById(roomId);
+        if (room != null && !room.isReserved()) {
+            room.setReserved(true);
+            roomDao.updateRoom(room);
+            return true;
         }
         return false;
     }
 
     public boolean cancelReservation(String roomId) {
-        for (ConferenceRoom room : availableRooms) {
-            if (room.getId().equals(roomId) && room.isReserved()) {
-                room.setReserved(false);
-                return true;
-            }
+        ConferenceRoom room = roomDao.getRoomById(roomId);
+        if (room != null && room.isReserved()) {
+            room.setReserved(false);
+            roomDao.updateRoom(room);
+            return true;
         }
         return false;
     }
 
     public List<ConferenceRoom> getAvailableRooms() {
-        List<ConferenceRoom> result = new ArrayList<ConferenceRoom>();
-        for (ConferenceRoom room : availableRooms) {
-            if (!room.isReserved()) {
-                result.add(room);
-            }
-        }
-        return result;
+        return roomDao.getAllRooms().stream()
+                .filter(room -> !room.isReserved())
+                .collect(Collectors.toList());
     }
+
+    // You can add other methods as necessary
 }
+
