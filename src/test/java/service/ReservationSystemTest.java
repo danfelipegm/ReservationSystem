@@ -12,7 +12,7 @@ public class ReservationSystemTest {
 
     @BeforeEach
     public void setUp() {
-        system = new ReservationSystem();
+        //system = new ReservationSystem();
     }
 
     @Test

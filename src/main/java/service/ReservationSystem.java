@@ -1,5 +1,6 @@
 package service;
 
+import dao.ConferenceRoomDao;
 import model.ConferenceRoom;
 
 import java.util.ArrayList;
@@ -8,8 +9,10 @@ import java.util.List;
 public class ReservationSystem {
 
     private List<ConferenceRoom> availableRooms = new ArrayList<ConferenceRoom>();
+    private ConferenceRoomDao roomDao;
 
-    public ReservationSystem() {
+    public ReservationSystem(ConferenceRoomDao roomDao) {
+        this.roomDao = roomDao;
         availableRooms.add(new ConferenceRoom("A1", 10));
         availableRooms.add(new ConferenceRoom("A2", 20));
     }
